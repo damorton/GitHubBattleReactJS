@@ -1,9 +1,10 @@
-var React = require("react");
-var PropTypes = require("prop-types");
-var api = require("../utils/api");
+var React = require('react');
+var PropTypes = require('prop-types');
+var api = require('../utils/api');
+var Loading = require('./Loading');
 
 function SelectedLanguage(props) {
-  var languages = ["All", "JavaScript", "Ruby", "Java", "CSS", "Python"];
+  var languages = ['All', 'JavaScript', 'Ruby', 'Java', 'CSS', 'Python'];
 
   return (
     <ul className="languages">
@@ -11,7 +12,7 @@ function SelectedLanguage(props) {
         return (
           <li
             style={
-              lang === props.selectedLanguage ? { color: "#d0021b" } : null
+              lang === props.selectedLanguage ? { color: '#d0021b' } : null
             }
             onClick={props.onSelect.bind(null, lang)}
             key={lang}
@@ -41,7 +42,7 @@ function RepoGrid(props) {
                 <img
                   className="avatar"
                   src={repo.owner.avatar_url}
-                  alt={"Avatar for " + repo.owner.login}
+                  alt={'Avatar for ' + repo.owner.login}
                 />
               </li>
               <li>
@@ -66,7 +67,7 @@ class Popular extends React.Component {
     super(props);
 
     this.state = {
-      selectedLanguage: "All",
+      selectedLanguage: 'All',
       repos: null
     };
 
@@ -104,7 +105,7 @@ class Popular extends React.Component {
           onSelect={this.updateLanguage}
         />
         {!this.state.repos ? (
-          <p>LOADING</p>
+          <Loading />
         ) : (
           <RepoGrid repos={this.state.repos} />
         )}
