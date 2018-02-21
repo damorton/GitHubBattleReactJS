@@ -1,7 +1,7 @@
-const React = require('react');
-const PropTypes = require('prop-types');
-const api = require('../utils/api');
-const Loading = require('./Loading');
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { fetchPopularRepos } from '../utils/api';
+import Loading from './Loading';
 
 function SelectedLanguage({ selectedLanguage, onSelect }) {
   const languages = ['All', 'JavaScript', 'Ruby', 'Java', 'CSS', 'Python'];
@@ -11,7 +11,7 @@ function SelectedLanguage({ selectedLanguage, onSelect }) {
       {languages.map((lang) => {
         <li
           style={lang === selectedLanguage ? { color: '#d0021b' } : null}
-          onClick={onSelect(lang)}
+          onClick={() => onSelect(lang)}
           key={lang}
         >
           {lang}
@@ -29,7 +29,7 @@ SelectedLanguage.propTypes = {
 function RepoGrid({ repos }) {
   return (
     <ul className="popular-list">
-      {repos.map(({ name, owner, html_url, stargazers_count }, index) => {
+      {repos.map(({ name, owner, html_url, stargazers_count }, index) => (
         <li key={name} className="popular-item">
           <div className="popular-rank">#{index + 1}</div>
           <ul className="space-list-items">
@@ -46,8 +46,8 @@ function RepoGrid({ repos }) {
             <li>@{owner.login}</li>
             <li>{stargazers_count} stars</li>
           </ul>
-        </li>;
-      })}
+        </li>
+      ))}
     </ul>
   );
 }
@@ -56,36 +56,27 @@ RepoGrid.propTypes = {
   repos: PropTypes.array.isRequired
 };
 
-class Popular extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      selectedLanguage: 'All',
-      repos: null
-    };
-
-    this.updateLanguage = this.updateLanguage.bind(this);
-  }
+export default class Popular extends Component {
+  state = {
+    selectedLanguage: 'All',
+    repos: null
+  };
 
   componentDidMount() {
     this.updateLanguage(this.state.selectedLanguage);
   }
 
-  updateLanguage(lang) {
+  updateLanguage = (lang) => {
     this.setState(() => ({
       selectedLanguage: lang,
       repos: null
     }));
 
-    api.fetchPopularRepos(lang).then((repos) => {
-      this.setState(() => ({ repos }));
-    });
-  }
+    fetchPopularRepos(lang).then((repos) => this.setState(() => ({ repos })));
+  };
 
   render() {
     const { selectedLanguage, repos } = this.state;
-
     return (
       <div>
         <SelectedLanguage
@@ -97,5 +88,3 @@ class Popular extends React.Component {
     );
   }
 }
-
-module.exports = Popular;
