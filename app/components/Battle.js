@@ -26,7 +26,7 @@ class PlayerInput extends React.Component {
   }
 
   render() {
-    const { label } = props;
+    const { label } = this.props;
     const { username } = this.state;
 
     return (
